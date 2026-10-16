@@ -1,0 +1,4 @@
+interface:
+  display_name: "Trading Script Writer"
+  short_description: "依策略構想與目標平台產生交易程式碼：Pine Script v6（TradingView）、MultiCharts PowerLanguage（PLE）或 XQ"
+  default_prompt: "Use $trading-script-writer to run this upgraded Gem workflow."

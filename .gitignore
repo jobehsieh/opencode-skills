@@ -1,0 +1,15 @@
+# 產生物與大型目錄（不進版控）
+**/.venv/
+**/venv/
+**/node_modules/
+**/__pycache__/
+**/*.pyc
+**/.pytest_cache/
+**/.next/
+**/dist/
+**/build/
+
+# 系統檔案
+**/.DS_Store
+**/Thumbs.db
+**/desktop.ini

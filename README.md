@@ -39,6 +39,7 @@ git clone https://github.com/jobehsieh/opencode-skills.git "$env:USERPROFILE\.co
 | `shutdown` | 收工同步助手：更新 `AGENTS.md` 進度與 `handoff.md`、commit＋push、寫入詳細筆記 |
 | `startup` | 開工接續助手：讀 `AGENTS.md` 與 `handoff.md`、檢查 git 狀態（含 fetch）、建議下一步 |
 | `strategy-optimizer` | 量化策略優化代理（透過 Trader Dev MCP 搜尋、分叉、改進、回測並保留穩健版本） |
+| `taigi-asr` | 臺灣閩南語（台語）語音轉文字：用 MediaTek Breeze-ASR-26＋faster-whisper，可輸出 txt／srt／vtt／json。**只含程式與說明**，`.venv` 與模型（約 2.9 GB）須在新電腦另行下載 |
 | `trading-script-writer` | 交易策略程式碼產生：Pine Script v6（TradingView）／MultiCharts PowerLanguage／XQ XScript |
 | `voice-permission` | 語音權限通知的設計規範（功能已由 `voice-permission` plugin 自動處理，技能留作規格文件） |
 
@@ -52,7 +53,7 @@ git clone https://github.com/jobehsieh/opencode-skills.git "$env:USERPROFILE\.co
 | Obsidian MCP 修補 | `~/.config/opencode/mcp/obsidian-linkfix.mjs` | 修 Google 雲端硬碟不支援 hard link 的問題（沒有它，MCP 新建筆記會失敗） |
 | Plugins | `~/.config/opencode/plugins/` | 例如 `voice-permission.ts` |
 | 指示檔 | `~/.config/opencode/instructions/` | 語音輸入正規化、語音回覆等 |
-| 台語 ASR 技能 | `~/.config/opencode/skills/taigi-asr/` | 含 `.venv` 與 Hugging Face 模型（約 2.9 GB），已被 `.gitignore` 排除，且**不在所有電腦上都安裝** |
+| 台語 ASR 的環境 | `~/.config/opencode/skills/taigi-asr/.venv` 與 Hugging Face 快取 | 技能程式與 `SKILL.md` 已在 repo 內；但 `.venv` 與模型（約 2.9 GB）被 `.gitignore` 排除，換電腦後要依 `taigi-asr/SKILL.md` 的「環境重建」段重裝 |
 | 憑證與金鑰 | 各專案的 `.env` | 一律不進任何 repo |
 
 ---
@@ -81,4 +82,4 @@ git push
 
 ## 隱私
 
-本 repo 為**私有**。推之前請確認沒有：API key、密碼、金鑰、個資（姓名／Email／電話／地址）、憑證檔。技能文件本身應只描述「怎麼做」，不應包含真實憑證或可辨識個人的資料。
+本 repo 目前為**公開**。推之前請確認沒有：API key、密碼、金鑰、個資（姓名／Email／電話／地址）、憑證檔。技能文件本身應只描述「怎麼做」，不應包含真實憑證或可辨識個人的資料。

@@ -33,18 +33,23 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$HOME\.config\opencode\
 
 ## 二、語音通知（自動，由 Plugin 觸發）
 
-工作結束或需要使用者介入時，會自動語音通知，讓使用者即時處理。這是 OpenCode plugin 訂閱事件執行的，**不需要 Agent 自己呼叫**：
+工作結束或需要使用者介入時，會自動語音通知，讓使用者即時處理。這是 OpenCode plugin 自動執行的，**不需要 Agent 自己呼叫**：
 
-| 時機 | 事件 / 掛鉤 | 語音內容 |
+| 時機 | 判斷方式 | 語音內容 |
 |---|---|---|
-| 一輪工作結束 | event `session.idle` | 「工作已完成，請查看畫面上的結果。」 |
-| 需要授權 | event `permission.asked`（hook `permission.ask` 保留備用） | 「需要您的權限：<類型> …請允許或拒絕。」 |
-| Agent 向使用者提問 | event `question.asked` | 「有問題需要您回答，請回到畫面上回覆。」 |
+| 一輪工作結束 | `ctx.session.wait({sessionID})` resolve（等 session 從忙碌變閒置） | 「工作已完成，請查看畫面上的結果。」 |
+| 需要授權 | event `permission.asked` | 「需要您的權限，請允許或拒絕。」 |
+| Agent 向使用者提問 | event `question.asked`（若該版有送） | 「有問題需要您回答，請回到畫面上回覆。」 |
 
-- Plugin 位置：`~/.config/opencode/plugins/voice-permission.mjs`（由 `opencode.jsonc` 的 `plugin` 載入）。
+- Plugin 位置：`~/.config/opencode/plugins/voice-permission.ts`（由 `opencode.jsonc` 的 `plugins` 陣列載入）。**注意是 `.ts`，不是 `.mjs`**。
 - 它使用 `~/Documents/Default Project/.venv` 的 Python（edge-tts + mutagen）行內播放，fire-and-forget、不阻塞。
-- 執行記錄：`~/Documents/Default Project/voice-permission.log`；若無語音先查此 log 是否有對應事件與 `python exit: 0`。
-- 改完 plugin 需**重啟 OpenCode** 才會載入。
+- 執行記錄：`~/Documents/Default Project/voice-permission.log`；若無語音先查此 log 是否有 `wait:done` / `event:` 與 `python exit: 0`。
+- **改完 plugin 會自動重載**（存檔後幾秒內生效，log 會出現新的 `plugin loaded (v8…)`），不需要重啟 OpenCode。若沒生效，才重啟。
+
+> **🕳️ 2026-10-23 踩坑（已修）**：`session.idle` 與 `question.asked` 這兩個事件在 OpenCode 1.18.30 **完全不會送到 plugin**（log 裡 0 筆，只有 `permission.asked` 正常），所以「工作完成」與「提問」的語音**從來沒響過**——使用者聽到的其實都是權限提示。
+> 另外 V1 寫法（`export default async function({client})`）已被拒絕載入：`Plugin must export a default definition with an id and an effect or setup function.`，拿不到 `client`／`serverUrl` 可輪詢。
+> 解法：V2 `ctx` 執行期其實有 `ctx.session = {hook,create,get,prompt,interrupt,update,move,wait,context,…}` 與 `ctx.permission = {hook,list,get,reply}`（型別宣告沒寫），改用 `ctx.session.wait({sessionID})` 等閒置，就不怕事件改名。實測 arm 於 15:59:43、resolve 於 16:00:32（49 秒後，正是該輪結束時間），播音正常。
+> 防誤報：只在「明確做事」的事件（`session.prompted`／`session.step.started`／`session.tool.called` 等）掛 watcher，且 `wait` 若在 1.5 秒內就 resolve 視為「本來就閒置」不播。
 
 **Agent 的責任**：需要使用者決定時，直接提問並停下等待（會觸發上面的通知），不要猜測後繼續。若通知沒響，先檢查 `edge-tts` 與網路（Edge-TTS 需連線），不要改用其他語音工具。
 
@@ -60,7 +65,7 @@ OpenCode 已把開工／收工做成獨立技能，直接觸發即可：
 - [ ] `chezmoi update`（同步 OpenCode／Claude Code 設定）
 - [ ] 確認 OpenCode 設定來源 `dot_config/opencode` 已含 `skills/agent-global-config`
 - [ ] 安裝 Edge-TTS：`uv tool install edge-tts`（或 pip）
-- [ ] 確認 plugin `voice-permission.mjs` 所需環境：`uv venv "$HOME/Documents/Default Project/.venv"` 並 `uv pip install --python ... edge-tts mutagen`
+- [ ] 確認 plugin `voice-permission.ts` 所需環境：`uv venv "$HOME/Documents/Default Project/.venv"` 並 `uv pip install --python ... edge-tts mutagen`
 - [ ] 檢查 API key 檔案是否存在
 - [ ] 手動同步其他 Agent（Codex、Gemini／Antigravity）的設定
 

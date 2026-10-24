@@ -72,3 +72,42 @@ OpenCode 已把開工／收工做成獨立技能，直接觸發即可：
 ## 五、語音輸入錯字
 
 語音輸入的錯字處理規則見全域指令 `~/.config/opencode/instructions/voice-input-normalization.md`，此處不重複。
+
+## 六、新網站基本設定：favicon 三件套（必做）
+
+**觸發**：建立任何新網站／新 App（Next.js、Astro、Vite…），或既有網站還在用框架預設圖示時。
+
+每個網站都要有**依站名設計**的專屬 favicon，不准沿用 Vercel／Next.js 的預設三角形。缺這項就不算「可交付」。
+
+**必做三件套**（同一份圖，三种格式）：
+
+| 檔案 | 尺寸 | 用途 |
+|---|---|---|
+| `icon.svg` | 向量（viewBox 0 0 64 64） | 現代瀏覽器分頁圖示，最清楚 |
+| `favicon.ico` | 16／32／48 多尺寸 | Safari、舊瀏覽器、書籤、Windows 捷徑 |
+| `apple-icon.png` | 180×180 | iOS 加到主畫面、Safari 書籤 |
+
+**設計規則**
+- 依站名取**單一識別元素**：一個字（中文取一字、英文取首字母）或一個概念圖示（例：雪花＝冰箱管理、學士帽＝考試、錢包＝記帳、蓮花＝佛法）。
+- 16px 是驗收尺寸：只放一個元素，不要字＋圖並排；中文筆畫太密（鮮、帳、聚）**優先用概念圖示**。
+- 主色一站一色，避免多站撞色；圓角 15/64、四周留 12% padding。
+
+**Next.js 放置方式**
+- 檔案放 `app/` 或 `src/app/`（monorepo 常見 `web-platform/src/app/`），檔名照上表。
+- **刪掉框架預設的 `app/favicon.ico`**，否則舊三角圖示會被繼續送出。
+- Next.js 會自動輸出 `<link rel="icon">` 與 `<link rel="apple-touch-icon">`，不必改 `layout.tsx`。
+
+**驗收（部署後實際抓，不看本機）**
+1. 抓首頁 HTML，確認有 `rel="icon"` 指向 `/icon.svg` 與 `/favicon.ico`。
+2. `GET /favicon.ico` 回 200 且位元組與本機檔案一致；`GET /apple-icon.png` 同理。
+3. 瀏覽器 tab 若還是舊圖，是 favicon 快取 → `Ctrl+F5` 或無痕視窗（不是沒生效）。
+
+**部署與同步的坑**
+- Vercel 專案若沒接 Git 自動部署（`vercel ls` 顯示好幾天沒更新），push 完要手動 `vercel deploy --prod`。
+- monorepo 若有 `sync-to-github.ps1`（robocopy `/MIR`），一定要把 icon 也放回**雲端硬碟來源資料夾**，否則下次同步會被刪掉。
+- 用 `vercel link`／`vercel deploy` 會在專案產生 `.env.local`（含 `VERCEL_OIDC_TOKEN`），用完立刻刪除。
+
+**現成資源**
+- 樣板與產生器：`<你的雲端硬碟>/AI英文家教/favicon-樣板/`（`index.html` 預覽頁、`svg/` 24 個樣式、`generate.mjs` 換站名即可重生）。
+- 初始化時的做法與檢查項見 `project-init` 技能第四節。
+

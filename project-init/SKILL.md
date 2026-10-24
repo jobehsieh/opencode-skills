@@ -39,6 +39,9 @@ description: 專案初始化技能（三層級自動偵測）。當使用者說�
 4. **建立 `handoff.md`**：用下方範本為底，「目前做到哪」填「專案初始化完成」，更新者填 Agent 名＋電腦名
    - 電腦名：Windows（PowerShell）用 `$env:COMPUTERNAME`；Mac／Linux 用 `hostname`
 5. 若路徑含「雲端硬碟」「My Drive」「Google Drive」→ 提醒使用者確認雲端硬碟桌面版的同步圖示已打勾（檔案要真的躺在雲端，換電腦才拿得到）
+6. **若是網站／App 專案 → 一併建 favicon 三件套**（`icon.svg`＋`favicon.ico`＋`apple-icon.png`），做法見本技能〈網站專案的 favicon 三件套〉
+   - 依專案名稱設計（一個字或一個概念圖示），不要沿用框架預設圖示
+   - 在 `AGENTS.md` 的路線圖加一條 `- [ ] favicon 三件套（依站名設計）`，收工時才有東西可勾
 
 #### 範本：`AGENTS.md`
 
@@ -106,6 +109,20 @@ description: 專案初始化技能（三層級自動偵測）。當使用者說�
 - 更新者：<Agent 名> @ <電腦名>
 - Git push：<✅ 已推｜❌ 未推（原因）｜—（本專案未啟用 git）>
 ```
+
+### 網站專案的 favicon 三件套（L1 加做，完整規範見 `agent-global-config` 第六節）
+
+新網站專案在 L1 就要把 favicon 做完，缺這項不算「初始化完成」：
+
+1. **設計**：依專案名稱取單一識別元素（中文一字／英文首字母／概念圖示），一站一色。
+2. **產生三個檔**：`icon.svg`（向量）、`favicon.ico`（16/32/48）、`apple-icon.png`（180×180）。
+   - 工具包（隨本技能附帶）：`assets/favicon/`
+     - `generate.mjs`：改最上面的 `SITES` 後 `node generate.mjs`，產生 3 種風格 SVG＋預覽頁（純 SVG，零依賴）
+     - `rasterize.mjs`：選定風格後點陣化出 `favicon.ico` 與 `apple-icon.png`（需 `npm i sharp png-to-ico`）
+   - 既有案例可參考：`<雲端硬碟>/AI英文家教/favicon-樣板/`
+3. **放置**：Next.js 放 `app/` 或 `src/app/`（monorepo 如 `web-platform/src/app/`），並**刪掉框架預設的 `app/favicon.ico`**。
+4. **驗收**：部署後抓首頁 HTML 確認 `rel="icon"` 指向 `/icon.svg` 與 `/favicon.ico`；`GET /favicon.ico` 位元組要與本機檔案一致。tab 還是舊圖 = 瀏覽器快取（`Ctrl+F5`）。
+5. **寫進 `AGENTS.md` 路線圖**：`- [ ] favicon 三件套（依站名設計）`，收工時勾掉。
 
 ### L2：GitHub（`gh` 已登入才做，否則跳過並註明）
 

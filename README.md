@@ -21,6 +21,11 @@ git clone https://github.com/jobehsieh/opencode-skills.git "$env:USERPROFILE\.co
 
 > 若該目錄已有內容（例如內建技能），先把原內容備份到別處，clone 後再補回缺少的部分，避免覆蓋。
 
+> **這個目錄不受 chezmoi 管理**：`dotfiles` 的 `.chezmoiignore` 已排除 `.config/opencode/skills`
+> （原因：它本身是 git repo，若 chezmoi 再複製一份，改技能文件後 `chezmoi apply` 會把實際檔案蓋回舊版）。
+> 換電腦的順序是：先 `chezmoi init --apply jobehsieh/dotfiles`，再 git clone 本 repo 到
+> `~/.config/opencode/skills`。改技能時**只需要**推這個 repo，不必再 `chezmoi add`。
+
 ---
 
 ## 技能一覽

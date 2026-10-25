@@ -1,6 +1,6 @@
 ---
 name: quiz-lead-site
-description: 做一個「線上測驗 → 填 email 換結果 → 收集名單 → 後台匯出」的網站（Next.js App Router＋MongoDB＋LLM 分析＋單一管理員）。當使用者說「做一個測驗網站」「心理測驗收集 email」「quiz 收集名單」「做個小測驗順便收名單」「做一個有後台的報名／名單收集網站」時使用。涵蓋題庫資料檔、AI 分析 API（三態）、名單 upsert、管理員登入、後台名單與 Excel 匯出、Vercel 上線與限流，以及 12 個實測踩坑。
+description: 做一個「線上測驗 → 填 email 換結果 → 收集名單 → 後台匯出」的網站（Next.js App Router＋MongoDB＋LLM 分析＋單一管理員）。當使用者說「做一個測驗網站」「做個小測驗」「心理測驗／人格測驗／性向測驗網站」「quiz 收集名單」「填問卷換結果」「做一個有分數結果的測驗」「留下 email 才看得到結果」「做一個收集 email 的 landing page」「報名頁收集 email」「測驗結果順便存名單」「做個 lead magnet 測驗」「做一個有後台的名單收集網站」「想收集潛在客戶名單」時使用。也適用於「已經有題目，幫我做成網站並存進資料庫」「測驗做完要看得到後台名單、可以下載 Excel」這類需求。涵蓋題庫資料檔、AI 分析 API（三態）、名單 upsert、管理員登入、後台名單與 Excel 匯出、Vercel 上線與限流，以及 12 個實測踩坑。
 ---
 
 # 測驗型名單收集網站（quiz → lead → AI 分析 → 後台）

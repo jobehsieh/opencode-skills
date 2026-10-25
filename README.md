@@ -40,6 +40,7 @@ git clone https://github.com/jobehsieh/opencode-skills.git "$env:USERPROFILE\.co
 | `photo-composition-critic` | 攝影構圖與美學評論（依 AVA／NIMA／LAION-Aesthetics 等計算美學研究） |
 | `photo-slideshow` | 把照片做成影片：Ken Burns 運鏡、轉場、節拍同步、字幕與開場／結尾卡 |
 | `project-init` | 專案初始化（L1 本地 AGENTS.md＋handoff.md／L2 GitHub／L3 Obsidian 三層級自動偵測） |
+| `quiz-lead-site` | 測驗型名單收集網站的完整流程：題庫資料檔、AI 分析 API（三態）、名單 upsert、管理員登入、後台名單與 Excel、Vercel 上線與限流，附 12 個實測踩坑與驗收清單 |
 | `rdq` | RDQ 需求探索四象限訪談（OpenCode 版）：動工「之前」做結構化訪談，產出一頁需求規格卡 |
 | `shutdown` | 收工同步助手：更新 `AGENTS.md` 進度與 `handoff.md`、commit＋push、寫入詳細筆記 |
 | `startup` | 開工接續助手：讀 `AGENTS.md` 與 `handoff.md`、檢查 git 狀態（含 fetch）、建議下一步 |

@@ -111,3 +111,28 @@ OpenCode 已把開工／收工做成獨立技能，直接觸發即可：
 - 樣板與產生器：`<你的雲端硬碟>/AI英文家教/favicon-樣板/`（`index.html` 預覽頁、`svg/` 24 個樣式、`generate.mjs` 換站名即可重生）。
 - 初始化時的做法與檢查項見 `project-init` 技能第四節。
 
+## 七、專案放哪裡：程式碼本機、文件雲端、用 git 同步（鐵則）
+
+**一句話**：會產生 `node_modules` 的專案，一律放本機 `C:\dev\<ascii-name>`；雲端硬碟只放文件與鏡像，用 GitHub 私有 repo 同步程式碼。
+
+| 項目 | 放哪裡 |
+|---|---|
+| 程式碼、`node_modules`、`.next`、`.git` | 本機 `C:\dev\<ascii-name>`（ASCII 路徑） |
+| `AGENTS.md`＋`handoff.md` | 正本在 repo；雲端資料夾放同名鏡像 |
+| `專案位置.md` | 雲端資料夾（寫明本機路徑與 repo 網址） |
+| 筆記、素材、書稿、簡報 | 雲端硬碟資料夾（第二大腦） |
+
+**絕對不要**：在 `H:\我的雲端硬碟\...`、`G:\...` 這類虛擬磁碟跑 `npm install`／`npm ci`／`pnpm i`。
+
+- 2026-10-25 實測：`npm install` 回報「added 357 packages」看似成功，實際 21538 個檔案有 **21375 個是 0 bytes**，`next build` 直接 `ERR_INVALID_PACKAGE_CONFIG`。
+- junction／symlink 也建不起來（`Local NTFS volumes are required`／`The device does not support symbolic links`）。
+- 判斷方式：`fsutil fsinfo volumeinfo H:`，非 NTFS 就是虛擬磁碟。
+
+**流程接點**
+- 新專案：`project-init` 的 L0 會先決定放哪裡（程式碼→`C:\dev`，文件→雲端）。
+- 開工：`startup` 看到雲端資料夾的 `專案位置.md` 就切到本機路徑再讀 `handoff.md`。
+- 收工：`shutdown` 把 `AGENTS.md`＋`handoff.md` 同步回雲端鏡像（只這兩個小檔）。
+
+完整說明見全域指令 `~/.config/opencode/instructions/env-cloud-drive-dev.md`（每次 session 自動載入）。
+
+

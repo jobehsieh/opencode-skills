@@ -11,7 +11,7 @@ description: 專案初始化技能（三層級自動偵測）。當使用者說�
 
 | 層級 | 平台 | 建立的東西 | 讀取時機 |
 |------|------|-----------|---------|
-| L1 本地 | 專案資料夾（建議放在你的雲端硬碟資料夾） | `AGENTS.md`（專案藍圖）＋`handoff.md`（交接檔） | **每個 session 都讀** |
+| L1 本地 | 程式碼專案：本機開發目錄（慣例 `C:\dev\<ascii-name>`）；文件專案：雲端硬碟資料夾 | `AGENTS.md`（專案藍圖）＋`handoff.md`（交接檔） | **每個 session 都讀** |
 | L2 GitHub | 私有 repo | git 版本控制＋雲端備份 | 指定才讀 |
 | L3 Obsidian | 第二大腦 vault | `專案工作流程.md`（詳細筆記） | 有需要才讀 |
 
@@ -31,6 +31,19 @@ description: 專案初始化技能（三層級自動偵測）。當使用者說�
 
 ## 初始化 SOP（依序執行）
 
+### L0：先決定專案要放哪裡（**動工前必做**）
+
+**鐵則：只要專案會產生 `node_modules`／`venv`／`bin`／`obj` 這類大量小檔案，就不能放在 Google 雲端硬碟資料夾。**
+
+1. 判斷型態：
+   - **程式碼專案**（網站、App、Node／Python 工具）→ 建在**本機開發目錄**：Windows 慣例 `C:\dev\<ascii-name>`，資料夾名一律 ASCII
+   - **純文件專案**（書稿、簡報、教材、報告）→ 可直接放雲端硬碟資料夾
+2. 若使用者指定的路徑在雲端硬碟（`H:\我的雲端硬碟\...`、`G:\...`）→ 先用 `fsutil fsinfo volumeinfo H:` 確認是不是 NTFS；不是 NTFS 就不能在裡面裝依賴，直接改用 `C:\dev\<ascii-name>`
+3. 雲端硬碟資料夾改成放：`AGENTS.md`、`handoff.md`（鏡像）、`專案位置.md`（指向本機路徑）——第二大腦裡看得到脈絡，程式碼用 git 同步
+4. 搬移後務必把踩坑寫進 `handoff.md` 的「⚠️ 注意事項」與 `AGENTS.md` 的「環境注意」，下一個 Agent 才不會重犯
+
+> 已實測：在 Google Drive 虛擬磁碟跑 `npm install`，21538 個檔案有 21375 個變成 0 bytes，`next build` 直接 `ERR_INVALID_PACKAGE_CONFIG`；junction／symlink 也建不起來。細節見全域 instruction `env-cloud-drive-dev.md`。
+
 ### L1：本地藍圖（永遠執行）
 
 1. **掃描資料夾現況**：列出既有檔案，若已有 `AGENTS.md` 或 `handoff.md` → 停下來問使用者是否要覆蓋
@@ -39,6 +52,7 @@ description: 專案初始化技能（三層級自動偵測）。當使用者說�
 4. **建立 `handoff.md`**：用下方範本為底，「目前做到哪」填「專案初始化完成」，更新者填 Agent 名＋電腦名
    - 電腦名：Windows（PowerShell）用 `$env:COMPUTERNAME`；Mac／Linux 用 `hostname`
 5. 若路徑含「雲端硬碟」「My Drive」「Google Drive」→ 提醒使用者確認雲端硬碟桌面版的同步圖示已打勾（檔案要真的躺在雲端，換電腦才拿得到）
+   - **但程式碼專案不該把程式碼鏡像到雲端**：只鏡像 `AGENTS.md`＋`handoff.md`＋`專案位置.md` 三個小檔，`node_modules`／`.next` 永遠不進雲端
 6. **若是網站／App 專案 → 一併建 favicon 三件套**（`icon.svg`＋`favicon.ico`＋`apple-icon.png`），做法見本技能〈網站專案的 favicon 三件套〉
    - 依專案名稱設計（一個字或一個概念圖示），不要沿用框架預設圖示
    - 在 `AGENTS.md` 的路線圖加一條 `- [ ] favicon 三件套（依站名設計）`，收工時才有東西可勾
@@ -74,9 +88,14 @@ description: 專案初始化技能（三層級自動偵測）。當使用者說�
 
 ## 工作約定
 - 任何 Agent、任何電腦：**開工先讀 `handoff.md`，收工必更新 `handoff.md`**
+- **程式碼放本機（`C:\dev\<ascii-name>`）、文件放雲端、用 git 同步**；**禁止在雲端虛擬磁碟跑 `npm install`／`npm ci`／`pnpm i`**（會產生整批 0 bytes 檔案）
 - 修改共用檔案前先讀最新內容，避免覆蓋其他 Agent 的變更
 - 所有回應與文件使用繁體中文
 - 修改前先確認計畫，優先保留原有資料結構
+
+## 環境注意（踩過的坑）
+<!-- 有踩到就補一條，格式：現象 → 原因 → 做法 -->
+- 雲端硬碟（Google Drive 虛擬磁碟）不能當開發目錄：`npm install` 會寫出 0 bytes 檔案、junction／symlink 建不起來 → 程式碼放 `C:\dev`，雲端只放藍圖與交接
 
 ## 安全與隱私（不可違反）
 - **不把 API key、密碼、憑證寫進 repo**，也不要貼進 `AGENTS.md`／`handoff.md`；一律放 `.env` 並列入 `.gitignore`
@@ -103,6 +122,7 @@ description: 專案初始化技能（三層級自動偵測）。當使用者說�
 
 ## ⚠️ 注意事項
 <!-- 坑、暫時 workaround、不要動的東西 -->
+- 程式碼正本位置：<C:\dev\ascii-name｜—（文件專案）>；**不要在雲端硬碟跑 npm install**，雲端資料夾只放本檔與 `AGENTS.md` 鏡像
 
 ## 🕐 最後更新
 - 時間：<YYYY-MM-DD HH:mm>
@@ -155,6 +175,7 @@ description: 專案初始化技能（三層級自動偵測）。當使用者說�
 
 ```
 🏗️ 本專案初始化至第 N 層級
+📂 程式碼位置：<C:\dev\ascii-name｜—（文件專案，在雲端）>
 ✅ L1 本地：AGENTS.md ＋ handoff.md
 ✅ L2 GitHub：<你的 GitHub 帳號>/<repo>（私有）
 ⚠️ L3 Obsidian：未建（這台電腦沒有 Obsidian MCP，之後可在有 Obsidian 的電腦說「補建第三層級」）
@@ -162,6 +183,7 @@ description: 專案初始化技能（三層級自動偵測）。當使用者說�
 
 ## 不該做的事
 
+- ❌ 把程式碼專案建在雲端硬碟資料夾（或在那裡跑 `npm install`）→ 一定失敗，見〈L0〉
 - ❌ 未經確認就覆蓋既有的 `AGENTS.md`／`handoff.md`
 - ❌ 把藍圖檔名寫成小寫 `agents.md`（Mac／Linux 會讀不到）
 - ❌ 電腦沒 `gh`／Obsidian 時報錯中斷（正確行為：跳過該層級、在回報中註明原因）
@@ -171,5 +193,6 @@ description: 專案初始化技能（三層級自動偵測）。當使用者說�
 ## 注意事項
 
 - 所有訊息與檔案內容使用**繁體中文**
+- 程式碼專案：本機 `C:\dev\<ascii-name>` 為正本，雲端硬碟資料夾只放 `AGENTS.md`／`handoff.md` 鏡像＋`專案位置.md`
 - Windows＋雲端硬碟資料夾內跑 git 若遇寫入錯誤：`git config windows.appendAtomically false`
 - 之後的日常循環交給搭檔技能：開工（startup）讀、收工（shutdown）寫

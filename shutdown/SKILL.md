@@ -27,6 +27,7 @@ description: 收工同步助手（三層級自動偵測）。當使用者說「�
 - **L2**：專案有 `.git` → commit + push
 - **L3**：`AGENTS.md` 登記了 Obsidian 路徑，且**目前有可用的 Obsidian MCP 工具**（能讀寫 vault 筆記的工具）→ 寫詳細紀錄
 
+> **程式碼專案的位置慣例**：程式碼正本在 `C:\dev\<ascii-name>`（git repo），雲端硬碟資料夾只放 `AGENTS.md`＋`handoff.md` 鏡像＋`專案位置.md`。若 `AGENTS.md` 有登記鏡像路徑，收工要順手同步那兩個小檔（見 L1 第 3.5 步）。
 > 判斷 L3 請看你手上實際有哪些工具，不要假設特定工具名稱。
 > 低層級電腦打開高層級專案：做得到的照做，做不到的在 `handoff.md` 註明（例：「本次在無 Obsidian 的電腦收工，L3 筆記未更新」），回到高層級電腦時補。
 
@@ -45,6 +46,9 @@ description: 收工同步助手（三層級自動偵測）。當使用者說「�
    - ⚠️ 注意事項：新踩的坑、暫時 workaround
    - 🕐 最後更新：時間＋更新者（Agent 名 @ 電腦名）＋ Git push 狀態（先寫「待推」，L2 完成後回填）
      - 電腦名取得方式：Windows（PowerShell）用 `$env:COMPUTERNAME`；Mac／Linux 用 `hostname`
+3.5. **若有雲端鏡像資料夾**（`AGENTS.md` 的同步層級表有登記）：把 `AGENTS.md`＋`handoff.md` **這兩個檔**複製到雲端鏡像資料夾
+   - 只複製這兩個小檔；`node_modules`、`.next`、`.git`、程式碼一律不進雲端（雲端虛擬磁碟裝不了依賴）
+   - 鏡像以 repo 為正本，不要反過來從雲端覆蓋本機
 
 ### L2：git 同步（專案有 `.git` 才做）
 
@@ -68,6 +72,7 @@ description: 收工同步助手（三層級自動偵測）。當使用者說「�
 ✅ L1 本地：AGENTS.md 進度已更新、handoff.md 已改寫（更新者：<Agent> @ <電腦名>）
 ✅ L2 GitHub：<repo> 已 commit + push（<commit 標題>）
 ✅ L3 Obsidian：專案工作流程.md 已補紀錄
+📂 雲端鏡像：<已同步 AGENTS.md＋handoff.md｜—（本專案無鏡像）>
 ⚠️ 手動處理：<例：本次新增了 ~/.xxx_api_key，另一台電腦要手動建>
 ```
 
